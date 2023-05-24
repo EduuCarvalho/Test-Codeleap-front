@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import HomePage from "./Pages/HomePage";
+import SiginInPage from "./Pages/SignInPage";
 import GlobalStyle from "./Global/globalStyles";
+import MainScreen from "./Pages/MainScreen";
+
 
 
 function App() {
@@ -8,7 +10,8 @@ function App() {
     <BrowserRouter>
       <GlobalStyle/>
       <Routes>
-        <Route path = "/" element={<HomePage/>}/>
+        <Route path = "/" element={<SiginInPage/>}/>
+        <Route path="/home" element={<MainScreen/>}/>
      </Routes>
     </BrowserRouter>
   );
