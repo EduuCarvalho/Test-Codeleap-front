@@ -1,13 +1,30 @@
 import styled from "styled-components";
 import { SlArrowUp, SlArrowDown } from "react-icons/sl";
 import { useState } from "react";
+import { useContext } from "react";
+import { UserInfoContext } from "../../Contexts/userinfo";
+import {BiLogOut} from "react-icons/bi"
+import { useNavigate } from "react-router-dom";
+
 export default function FixedPostMessageContainer() {
   const [showPostContainer, setShowPostContainer] = useState(true);
-
+  const {userInfo, setUserInfo} = useContext(UserInfoContext)
+  console.log("CHEGOU USERINFO",userInfo)
+  const navigate = useNavigate();
+  
+  function LogoutIcon() {
+        localStorage.removeItem("username");
+        setUserInfo({username:null})
+        navigate("/");
+  }
+  console.log("lala",userInfo)
+  
   return (
     <MainContainer>
       <TittleBar>
         <h1>CodeLeap Network</h1>
+        {userInfo ?<h1>{userInfo.username}</h1>:<>sem nome</>}
+        <LogOutButton onClick={()=>LogoutIcon({navigate})}/>
       </TittleBar>
       {showPostContainer && (
         <PostMessageContainer show={showPostContainer}>
@@ -47,6 +64,7 @@ const TittleBar = styled.div`
   background: #7695ec;
   width: 100%;
   margin-bottom: 30px;
+  justify-content:space-between;
 
   h1 {
     font-family: "Roboto";
@@ -153,3 +171,9 @@ const HidePostButton = styled(SlArrowDown)`
   cursor: pointer;
   
 `;
+
+const LogOutButton = styled(BiLogOut)`
+    cursor: pointer;
+    color:#FFFFFF;
+    font-size:25px;
+`

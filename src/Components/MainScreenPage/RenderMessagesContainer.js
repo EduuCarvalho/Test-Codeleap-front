@@ -3,7 +3,9 @@ import { TbTrashXFilled } from "react-icons/tb";
 import { BiEdit } from "react-icons/bi";
 import moment from "moment";
 
+
 export default function RenderMessagesContainer({ messagesList }) {
+
   function getTime(date) {
     const createdDatetime = date; // Data de criação da postagem
     const currentDatetime = moment(); // Tempo atual

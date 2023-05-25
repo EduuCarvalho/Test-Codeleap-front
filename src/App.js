@@ -2,17 +2,18 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SiginInPage from "./Pages/SignInPage";
 import GlobalStyle from "./Global/globalStyles";
 import MainScreen from "./Pages/MainScreen";
-
-
+import UserInfoProvider from "./Contexts/userinfo";
 
 function App() {
   return (
     <BrowserRouter>
-      <GlobalStyle/>
-      <Routes>
-        <Route path = "/" element={<SiginInPage/>}/>
-        <Route path="/home" element={<MainScreen/>}/>
-     </Routes>
+      <GlobalStyle />
+      <UserInfoProvider>
+        <Routes>
+          <Route path="/" element={<SiginInPage />} />
+          <Route path="/home" element={<MainScreen />} />
+        </Routes>
+      </UserInfoProvider>
     </BrowserRouter>
   );
 }
