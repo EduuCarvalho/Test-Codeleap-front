@@ -1,34 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { UserInfoContext } from "../../Contexts/userinfo";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function SignInModal() {
 
+    const {setUserInfo, userInfo} = React.useContext(UserInfoContext)
     const [disabledButton, setDisabledButton] = useState(true);
     const [userName, setUserName] = useState("");
+    let navigate = useNavigate();
 
 function handleUserName(event){
-    const {value} = event.target;
+    const {username,value} = event.target;
     setUserName(value);
     setDisabledButton(value === "");
-    console.log(userName)
-    console.log(disabledButton)
+   
 }
+useEffect(() => {
+    if (userInfo.username) {
+      navigate("/home");
+    }
+  }, []);
 
+function logIn(e, username){
+    e.preventDefault();
+    setUserInfo({username:username})
+    localStorage.setItem("username", username)
+    navigate("/home")
+}
   return(
-    <SignInContaier>
+    <SignInContaier onSubmit={(e) => logIn(e,userName)}>
         <h1>Welcome to CodeLeap network!</h1>
        <UserNameInputContiner>
             <h1>Please enter you username</h1>
             <Input placeholder="username" onChange={handleUserName}/>
        </UserNameInputContiner>
         <ButtonContainer disabled={disabledButton}>
-            <button>ENTER</button>
+            <button type="submit">ENTER</button>
         </ButtonContainer>
     </SignInContaier>
   );
 }
 
-const SignInContaier = styled.div`
+const SignInContaier = styled.form`
     z-index:9999;
     position:absolute;
     display:flex;
