@@ -4,6 +4,7 @@ import RenderMessagesContainer from "../Components/MainScreenPage/RenderMessages
 import { useEffect, useState } from "react";
 import { getMessages } from "../Actions/actions";
 import DeleteModal from "../Components/Modals/DeleteModal";
+import PatchModal from "../Components/Modals/PatchModal";
 
 export default function MainScreen() {
 
@@ -11,7 +12,8 @@ export default function MainScreen() {
     const [loadingPost,setLoadingPost] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteMessageId,setDeleteMessageId] = useState();
-    console.log(deleteMessageId,"IDDDDDDDD")
+    const [showPatchModal, setShowPatchModal] = useState(true)
+
     useEffect(() =>{
 
         getMessages()
@@ -26,6 +28,7 @@ export default function MainScreen() {
             <FixedPostMessageContainer loadingPost={loadingPost} setLoadingPost={setLoadingPost}/>
             <RenderMessagesContainer setDeleteMessageId={setDeleteMessageId} setShowDeleteModal={setShowDeleteModal} messagesList={messagesList}/>
             {showDeleteModal && <DeleteModal deleteMessageId={deleteMessageId} setShowDeleteModal={setShowDeleteModal}/>}
+            {showPatchModal && <PatchModal/>}
         </MainPage>
     );
 };

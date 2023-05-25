@@ -4,7 +4,6 @@ import { deleteMessage } from "../../Actions/actions";
 export default function DeleteModal({deleteMessageId,setShowDeleteModal}) {
 
   function handleDelete(id) {
-    console.log(id,"id delete modal")
     deleteMessage(id)
     .then(()=>{
         console.log("item deletado");
