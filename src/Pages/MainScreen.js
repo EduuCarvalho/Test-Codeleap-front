@@ -3,12 +3,15 @@ import FixedPostMessageContainer from "../Components/MainScreenPage/FixedPostMes
 import RenderMessagesContainer from "../Components/MainScreenPage/RenderMessagesContainer";
 import { useEffect, useState } from "react";
 import { getMessages } from "../Actions/actions";
+import DeleteModal from "../Components/Modals/DeleteModal";
 
 export default function MainScreen() {
 
     const [messagesList, setMessagesList] = useState();
     const [loadingPost,setLoadingPost] = useState(false);
-
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deleteMessageId,setDeleteMessageId] = useState();
+    console.log(deleteMessageId,"IDDDDDDDD")
     useEffect(() =>{
 
         getMessages()
@@ -16,12 +19,13 @@ export default function MainScreen() {
             setMessagesList(res);
         })
         .catch((err)=> console.log(err))
-    },[loadingPost])
+    },[loadingPost,showDeleteModal])
 
    return(
         <MainPage> 
             <FixedPostMessageContainer loadingPost={loadingPost} setLoadingPost={setLoadingPost}/>
-            <RenderMessagesContainer messagesList={messagesList}/>
+            <RenderMessagesContainer setDeleteMessageId={setDeleteMessageId} setShowDeleteModal={setShowDeleteModal} messagesList={messagesList}/>
+            {showDeleteModal && <DeleteModal deleteMessageId={deleteMessageId} setShowDeleteModal={setShowDeleteModal}/>}
         </MainPage>
     );
 };
@@ -32,4 +36,6 @@ const MainPage = styled.div`
     display:flex;
     flex-direction:column;
     align-items:center;
+    justify-content:center;
+    padding-top:70px;
 `

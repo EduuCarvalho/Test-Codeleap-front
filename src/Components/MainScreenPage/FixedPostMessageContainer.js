@@ -14,7 +14,7 @@ export default function FixedPostMessageContainer({loadingPost, setLoadingPost})
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const navigate = useNavigate();
-  console.log(title)
+
   function LogoutIcon() {
     localStorage.removeItem("username");
     setUserInfo({ username: null });

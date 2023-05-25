@@ -13,3 +13,12 @@ export async function getMessages() {
       return null;
     }
   }
+export async function deleteMessage(id){
+
+    try {
+        const response = await axios.delete(`https://dev.codeleap.co.uk/careers/${id}`);
+        console.log(response.data,"Deletado com sucesso"); 
+      } catch (err) {
+        console.error(err); 
+      }
+}

@@ -2,20 +2,24 @@ import styled from "styled-components";
 import { TbTrashXFilled } from "react-icons/tb";
 import { BiEdit } from "react-icons/bi";
 import moment from "moment";
+import { useContext } from "react";
+import { UserInfoContext } from "../../Redux/userinfo";
 
 
-export default function RenderMessagesContainer({ messagesList }) {
 
+export default function RenderMessagesContainer({setDeleteMessageId,setShowDeleteModal, messagesList }) {
+
+    const {userInfo} = useContext(UserInfoContext)
+  
   function getTime(date) {
-    const createdDatetime = date; // Data de criação da postagem
-    const currentDatetime = moment(); // Tempo atual
-
+    const createdDatetime = date;
+    const currentDatetime = moment(); 
     const duration = moment.duration(currentDatetime.diff(createdDatetime));
-    const timeAgo = duration.humanize(); // Diferença de tempo em uma forma legível, como "há alguns segundos", "há 5 minutos", etc.
+    const timeAgo = duration.humanize(); 
 
-    return timeAgo + " ago"; // Exibe a diferença de tempo entre a data de criação e o tempo atual
+    return timeAgo + " ago"; 
   }
-  console.log(messagesList);
+ 
   return (
     <FeedMessagesContainer>
       {messagesList ? (
@@ -24,10 +28,10 @@ export default function RenderMessagesContainer({ messagesList }) {
             <MessageContainer key={msg.id}>
               <TittleBar>
                 <h1> {msg.title}</h1>
-                <ActionButtons>
-                  <DeleteIcon />
+                {msg.username===userInfo.username ? <ActionButtons>
+                  <DeleteIcon onClick={()=>{setDeleteMessageId(msg.id) ; setShowDeleteModal(true) }}/>
                   <EditIcon />
-                </ActionButtons>
+                </ActionButtons> : <></>}
               </TittleBar>
               <TextContainer>
                 <PostInfo>
