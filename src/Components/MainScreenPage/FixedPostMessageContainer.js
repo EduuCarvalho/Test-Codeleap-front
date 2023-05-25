@@ -2,44 +2,96 @@ import styled from "styled-components";
 import { SlArrowUp, SlArrowDown } from "react-icons/sl";
 import { useState } from "react";
 import { useContext } from "react";
-import { UserInfoContext } from "../../Contexts/userinfo";
-import {BiLogOut} from "react-icons/bi"
+import { UserInfoContext } from "../../Redux/userinfo";
+import { BiLogOut } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+import { postMessage } from "../../Actions/actions";
 
-export default function FixedPostMessageContainer() {
+export default function FixedPostMessageContainer({loadingPost, setLoadingPost}) {
   const [showPostContainer, setShowPostContainer] = useState(true);
-  const {userInfo, setUserInfo} = useContext(UserInfoContext)
+  const { userInfo, setUserInfo } = useContext(UserInfoContext);
+  const [disabledButton, setDisabledButton] = useState(true);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const navigate = useNavigate();
-  
+  console.log(title)
   function LogoutIcon() {
-        localStorage.removeItem("username");
-        setUserInfo({username:null})
-        navigate("/");
+    localStorage.removeItem("username");
+    setUserInfo({ username: null });
+    navigate("/");
   }
+
+  function handleTitle(event) {
+    const { value } = event.target;
+    setTitle(value.trim());
+    setDisabledButton(value.trim() === "" || content.trim() === "");
+  }
+  function handleContent(event) {
+    const { value } = event.target;
+    setContent(value.trim());
+    setDisabledButton(title.trim() === "" || value.trim() === "");
+  }
+
+  function handleFormSubmit(e) {
+    e.preventDefault();
+  
+    const data = {
+      username: userInfo.username,
+      title: title,
+      content: content,
+    };
+    setLoadingPost(true)
+    setDisabledButton(true)
+    postMessage(data)
+  .then((res) => {
+    setLoadingPost(false)
+    setContent("")
+    setTitle("")
+    console.log(res);
+  })
+  .catch((err) => {
+    setLoadingPost(false)
+    setContent("")
+    setTitle("")
+    console.log(err)
+  });
+}
 
   return (
     <MainContainer>
       <TittleBar>
         <h1>CodeLeap Network</h1>
-        {userInfo  ?<h1>{userInfo.username}</h1>:<h1>Enter a username to post message</h1>}
-        <LogOutButton onClick={()=>LogoutIcon({navigate})}/>
+        {userInfo ? (
+          <h1>{userInfo.username}</h1>
+        ) : (
+          <h1>Enter a username to post message</h1>
+        )}
+        <LogOutButton onClick={() => LogoutIcon({ navigate })} />
       </TittleBar>
       {showPostContainer && (
-        <PostMessageContainer show={showPostContainer}>
+        <PostMessageContainer
+          show={showPostContainer}
+          onSubmit={(e) => handleFormSubmit(e)}
+        >
           <h1>What's on your mind?</h1>
           <TittleInputContainer>
             <h1>Tittle</h1>
-            <input placeholder="Hello World"></input>
+            <input placeholder="Hello World" onChange={handleTitle} value={title}></input>
           </TittleInputContainer>
           <ContentInputContainer>
             <h1>Content</h1>
-            <input placeholder="Content here"></input>
+            <textarea value={content}
+              placeholder="Content here"
+              onChange={handleContent}
+            ></textarea>
           </ContentInputContainer>
-          <CreateButton>Create</CreateButton>
+          <CreateButton disabled={disabledButton} changeColor={disabledButton}>
+            {loadingPost ? "loading..." : "Create"}
+          </CreateButton>
         </PostMessageContainer>
       )}
       {showPostContainer ? (
-        <ShowPostButton onClick={() => setShowPostContainer(false)}  />
+        <ShowPostButton onClick={() => setShowPostContainer(false)} />
       ) : (
         <HidePostButton onClick={() => setShowPostContainer(true)} />
       )}
@@ -48,15 +100,15 @@ export default function FixedPostMessageContainer() {
 }
 
 const MainContainer = styled.div`
-  position:fixed;
-  left:0;
-  top:0;
+  position: fixed;
+  left: 0;
+  top: 0;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   box-shadow: 0px 20px 40px rgba(118, 149, 236, 0.3);
-  background-color:#FFFFFF;
+  background-color: #ffffff;
 `;
 
 const TittleBar = styled.div`
@@ -66,7 +118,7 @@ const TittleBar = styled.div`
   background: #7695ec;
   width: 100%;
   margin-bottom: 30px;
-  justify-content:space-between;
+  justify-content: space-between;
 
   h1 {
     font-family: "Roboto";
@@ -77,7 +129,7 @@ const TittleBar = styled.div`
     color: #ffffff;
   }
 `;
-const PostMessageContainer = styled.div`
+const PostMessageContainer = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -87,8 +139,7 @@ const PostMessageContainer = styled.div`
   border: 1px solid #999999;
   border-radius: 16px;
   width: 90%;
-  height: 350px; 
-
+  height: 350px;
 
   h1 {
     font-family: "Roboto";
@@ -127,6 +178,7 @@ const ContentInputContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  word-wrap: break-word;
 
   h1 {
     font-family: "Roboto";
@@ -137,7 +189,7 @@ const ContentInputContainer = styled.div`
     color: #000000;
   }
 
-  input {
+  textarea {
     border: 1px solid #777777;
     border-radius: 8px;
     background: #ffffff;
@@ -145,13 +197,18 @@ const ContentInputContainer = styled.div`
     margin-top: 8px;
     margin-bottom: 20px;
     padding: 8px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    font-family: "Roboto";
   }
 `;
 
 const CreateButton = styled.button`
   width: 120px;
   height: 32px;
-  background: #7695ec;
+  background: ${(props) => (props.changeColor ? "gray" : "#7695EC")};
   border-radius: 8px;
   border: none;
   font-family: "Roboto";
@@ -166,16 +223,14 @@ const ShowPostButton = styled(SlArrowUp)`
   margin-bottom: 20px;
   margin-top: 20px;
   cursor: pointer;
-
-  `;
+`;
 const HidePostButton = styled(SlArrowDown)`
   margin-bottom: 20px;
   cursor: pointer;
-  
 `;
 
 const LogOutButton = styled(BiLogOut)`
-    cursor: pointer;
-    color:#FFFFFF;
-    font-size:25px;
-`
+  cursor: pointer;
+  color: #ffffff;
+  font-size: 25px;
+`;

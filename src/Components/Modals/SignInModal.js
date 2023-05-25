@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { UserInfoContext } from "../../Contexts/userinfo";
+import { UserInfoContext } from "../../Redux/userinfo";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -19,8 +19,8 @@ export default function SignInModal() {
     if (userInfo.username) {
       navigate("/home");
     }
-  },[]);
-  // eslint-disable-next-line
+  },[userInfo.username, navigate]);
+ 
 
   function logIn(e, username) {
     e.preventDefault();
