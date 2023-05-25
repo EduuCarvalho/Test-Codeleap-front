@@ -15,6 +15,7 @@ export default function SiginInPage () {
     return (
         <MainPage backgound={showUserModal} onClick={showUsernameModal}>
             <Logo src={logo}/>
+            <h1>click to start...</h1>
            {showUserModal && <SignInModal/>} 
         </MainPage>
     );
@@ -22,6 +23,7 @@ export default function SiginInPage () {
 
 const MainPage = styled.div`
     display:flex;
+    flex-direction:column;
     width:100%;
     height:100vh;
     align-items:center;
@@ -29,6 +31,10 @@ const MainPage = styled.div`
     position: relative;
     background-color:${props => props.backgound ? "lightgray" : "#FFFFFF"};
 
+    h1{
+        cursor: pointer;
+        font-size:15px;
+    }
 `
 const Logo = styled.img`
    height:15%;

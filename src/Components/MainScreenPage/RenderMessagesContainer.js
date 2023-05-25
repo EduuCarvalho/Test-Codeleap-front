@@ -53,6 +53,7 @@ const FeedMessagesContainer = styled.section`
   width: 100%;
   height: 100%;
   padding: 24px 0px;
+  margin-top:150px;
 `;
 const MessageContainer = styled.div`
   display: flex;

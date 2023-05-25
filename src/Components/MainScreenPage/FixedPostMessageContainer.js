@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 export default function FixedPostMessageContainer() {
   const [showPostContainer, setShowPostContainer] = useState(true);
   const {userInfo, setUserInfo} = useContext(UserInfoContext)
-  console.log("CHEGOU USERINFO",userInfo)
   const navigate = useNavigate();
   
   function LogoutIcon() {
@@ -17,13 +16,12 @@ export default function FixedPostMessageContainer() {
         setUserInfo({username:null})
         navigate("/");
   }
-  console.log("lala",userInfo)
-  
+
   return (
     <MainContainer>
       <TittleBar>
         <h1>CodeLeap Network</h1>
-        {userInfo ?<h1>{userInfo.username}</h1>:<>sem nome</>}
+        {userInfo  ?<h1>{userInfo.username}</h1>:<h1>Enter a username to post message</h1>}
         <LogOutButton onClick={()=>LogoutIcon({navigate})}/>
       </TittleBar>
       {showPostContainer && (
@@ -50,11 +48,15 @@ export default function FixedPostMessageContainer() {
 }
 
 const MainContainer = styled.div`
+  position:fixed;
+  left:0;
+  top:0;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   box-shadow: 0px 20px 40px rgba(118, 149, 236, 0.3);
+  background-color:#FFFFFF;
 `;
 
 const TittleBar = styled.div`
