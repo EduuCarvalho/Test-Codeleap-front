@@ -12,7 +12,10 @@ export default function MainScreen() {
     const [loadingPost,setLoadingPost] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteMessageId,setDeleteMessageId] = useState();
-    const [showPatchModal, setShowPatchModal] = useState(true)
+    const [showPatchModal, setShowPatchModal] = useState(false)
+    const [loadingPatch,setLoadingPatch] = useState(false);
+    const [patchMessageId, setPatchMessageId] = useState();
+
 
     useEffect(() =>{
 
@@ -26,12 +29,14 @@ export default function MainScreen() {
    return(
         <MainPage> 
             <FixedPostMessageContainer loadingPost={loadingPost} setLoadingPost={setLoadingPost}/>
-            <RenderMessagesContainer setDeleteMessageId={setDeleteMessageId} setShowDeleteModal={setShowDeleteModal} messagesList={messagesList}/>
+            <RenderMessagesContainer setPatchMessageId={setPatchMessageId} setDeleteMessageId={setDeleteMessageId} setShowDeleteModal={setShowDeleteModal} messagesList={messagesList} setShowPatchModal={setShowPatchModal}/>
             {showDeleteModal && <DeleteModal deleteMessageId={deleteMessageId} setShowDeleteModal={setShowDeleteModal}/>}
-            {showPatchModal && <PatchModal/>}
+            {showPatchModal && <PatchModal patchMessageId={patchMessageId} loadingPatch={loadingPatch} setLoadingPatch={setLoadingPatch} setShowPatchModal={setShowPatchModal}/>}
         </MainPage>
     );
 };
+
+/* patchMessageId={patchMessageId} loadingPatch={loadingPatch} setLoadingPatch={setLoadingPatch} setShowPatchModal={setShowPatchModal */
 
 const MainPage = styled.div`
     width:100vw;

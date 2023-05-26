@@ -17,8 +17,18 @@ export async function deleteMessage(id){
 
     try {
         const response = await axios.delete(`https://dev.codeleap.co.uk/careers/${id}`);
-        console.log(response.data,"Deletado com sucesso"); 
+        console.log(response.data,"Deletado com sucesso");
+        return response
       } catch (err) {
         console.error(err); 
       }
+}
+
+export async function updateMessage(id, data){
+    return axios.patch(`https://dev.codeleap.co.uk/careers/${id}`, data)
+    .then((res) => res.data)
+    .catch((err) => {
+      console.log(err);
+      return null;
+    });
 }

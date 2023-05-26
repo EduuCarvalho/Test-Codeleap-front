@@ -7,7 +7,7 @@ import { UserInfoContext } from "../../Redux/userinfo";
 
 
 
-export default function RenderMessagesContainer({setDeleteMessageId,setShowDeleteModal, messagesList }) {
+export default function RenderMessagesContainer({setPatchMessageId,setDeleteMessageId,setShowDeleteModal, messagesList,setShowPatchModal }) {
 
     const {userInfo} = useContext(UserInfoContext)
   
@@ -29,8 +29,8 @@ export default function RenderMessagesContainer({setDeleteMessageId,setShowDelet
               <TittleBar>
                 <h1> {msg.title}</h1>
                 {msg.username===userInfo.username ? <ActionButtons>
-                  <DeleteIcon onClick={()=>{setDeleteMessageId(msg.id) ; setShowDeleteModal(true) }}/>
-                  <EditIcon />
+                  <DeleteIcon onClick={()=>{setDeleteMessageId(msg.id) ; setShowDeleteModal(true)}}/>
+                  <EditIcon onClick={() => {setPatchMessageId(msg.id); setShowPatchModal(true)}} />
                 </ActionButtons> : <></>}
               </TittleBar>
               <TextContainer>

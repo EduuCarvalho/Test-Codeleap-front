@@ -1,6 +1,45 @@
+import { useState } from "react";
 import styled from "styled-components";
+import { updateMessage } from "../../Actions/actions";
 
-export default function PatchModal() {
+export default function PatchModal({patchMessageId, loadingPatch, setLoadingPatch, setShowPatchModal}) {
+  const [disabledButton, setDisabledButton] = useState(true);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+console.log(patchMessageId,"ID NO MODAL PATCH")
+  function handleTitle(event) {
+    const { value } = event.target;
+    setTitle(value.trim());
+    setDisabledButton(value.trim() === "" || content.trim() === "");
+  }
+  function handleContent(event) {
+    const { value } = event.target;
+    setContent(value.trim());
+    setDisabledButton(title.trim() === "" || value.trim() === "");
+  }
+
+  function handleUpdate(e,id) {
+    e.preventDefault();
+
+    const data = {
+      title: title,
+      content: content,
+    };
+    setLoadingPatch(true)
+    setDisabledButton(true);
+    updateMessage(id,data)
+      .then((res) => {
+     setLoadingPatch(false); 
+        setContent("");
+        setTitle("");
+      })
+      .catch((err) => {
+        setLoadingPatch(false); 
+        setContent("");
+        setTitle("");
+      });
+  }
+
   return (
     <ModalOverlay>
       <PatchContainer>
@@ -8,18 +47,28 @@ export default function PatchModal() {
         <TittleInputContainer>
           <h1>Tittle</h1>
           <input
+            value={title}
             placeholder="Hello World"
+            onChange={handleTitle}
           ></input>
         </TittleInputContainer>
         <ContentInputContainer>
-            <h1>Content</h1>
-            <textarea 
-              placeholder="Content here"
-            ></textarea>
-          </ContentInputContainer>
-          <ButtonsContainer>
-          <CancelButton >Cancel</CancelButton>
-          <EditButton >Edit</EditButton>
+          <h1>Content</h1>
+          <textarea
+            value={content}
+            placeholder="Content here"
+            onChange={handleContent}
+          ></textarea>
+        </ContentInputContainer>
+        <ButtonsContainer>
+          <CancelButton onClick={()=>setShowPatchModal(false)}>Cancel</CancelButton>
+          <EditButton
+            disabled={disabledButton}
+            changeColor={disabledButton}
+            onClick={(e)=> handleUpdate(e,patchMessageId)}
+          >{loadingPatch? "loading..." : "Edit"}
+            
+          </EditButton>
         </ButtonsContainer>
       </PatchContainer>
     </ModalOverlay>
@@ -52,7 +101,7 @@ const PatchContainer = styled.div`
   border-radius: 16px;
   background: #ffffff;
 
-  @media screen and (max-width:600px) {
+  @media screen and (max-width: 600px) {
     height: 350px;
     width: 300px;
   }
@@ -143,7 +192,7 @@ const CancelButton = styled.button`
   border-radius: 8px;
 `;
 const EditButton = styled.button`
-  background: #47B960;
+  background: ${(props) => (props.changeColor ? "gray" : " #47B960")};
   border-radius: 8px;
   border: none;
   width: 111px;

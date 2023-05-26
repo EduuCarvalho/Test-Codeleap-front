@@ -1,9 +1,12 @@
 import styled from "styled-components";
 import { deleteMessage } from "../../Actions/actions";
+import Swal from 'sweetalert';
 
 export default function DeleteModal({deleteMessageId,setShowDeleteModal}) {
 
+  
   function handleDelete(id) {
+ 
     deleteMessage(id)
     .then(()=>{
         console.log("item deletado");
@@ -11,6 +14,12 @@ export default function DeleteModal({deleteMessageId,setShowDeleteModal}) {
     })
 .catch((err)=>{
     console.log("erro ao deletar")
+    Swal({
+      title: 'Error!',
+      text: 'Something went wrong.',
+      icon: 'error',
+      button: 'OK',
+    });
 })
   }
 

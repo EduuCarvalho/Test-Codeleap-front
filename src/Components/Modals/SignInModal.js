@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { UserInfoContext } from "../../Redux/userinfo";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert';
 
 export default function SignInModal() {
   const { setUserInfo, userInfo } = React.useContext(UserInfoContext);
@@ -26,6 +27,11 @@ export default function SignInModal() {
     e.preventDefault();
     setUserInfo({ username: username });
     localStorage.setItem("username", username);
+    Swal({
+      title: 'Success!',
+      icon: 'success',
+      button: 'OK',
+    });
     navigate("/home");
   }
   return (
