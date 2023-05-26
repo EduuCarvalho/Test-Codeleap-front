@@ -6,9 +6,10 @@ import { UserInfoContext } from "../../Redux/userinfo";
 import { BiLogOut } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { postMessage } from "../../Actions/actions";
+import Swal from 'sweetalert';
 
 export default function FixedPostMessageContainer({loadingPost, setLoadingPost}) {
-  const [showPostContainer, setShowPostContainer] = useState(true);
+  const [showPostContainer, setShowPostContainer] = useState(false);
   const { userInfo, setUserInfo } = useContext(UserInfoContext);
   const [disabledButton, setDisabledButton] = useState(true);
   const [title, setTitle] = useState("");
@@ -23,15 +24,15 @@ export default function FixedPostMessageContainer({loadingPost, setLoadingPost})
 
   function handleTitle(event) {
     const { value } = event.target;
-    setTitle(value.trim());
-    setDisabledButton(value.trim() === "" || content.trim() === "");
+    setTitle(value);
+    setDisabledButton(!/\S/.test(value) || !/\S/.test(content));
   }
+  
   function handleContent(event) {
     const { value } = event.target;
-    setContent(value.trim());
-    setDisabledButton(title.trim() === "" || value.trim() === "");
+    setContent(value);
+    setDisabledButton(!/\S/.test(title) || !/\S/.test(value));
   }
-
   function handleFormSubmit(e) {
     e.preventDefault();
   
@@ -47,13 +48,24 @@ export default function FixedPostMessageContainer({loadingPost, setLoadingPost})
     setLoadingPost(false)
     setContent("")
     setTitle("")
-    console.log(res);
+    setShowPostContainer(false)
+    Swal({
+      title: 'Success!',
+      text: 'Your message has been created.',
+      icon: 'success',
+      button: 'OK',
+    });
   })
   .catch((err) => {
     setLoadingPost(false)
     setContent("")
     setTitle("")
-    console.log(err)
+    Swal({
+      title: 'Error!',
+      text: 'Something went wrong.',
+      icon: 'error',
+      button: 'OK',
+    });
   });
 }
 
@@ -62,7 +74,7 @@ export default function FixedPostMessageContainer({loadingPost, setLoadingPost})
       <TittleBar>
         <h1>CodeLeap Network</h1>
         {userInfo ? (
-          <h1>{userInfo.username}</h1>
+          <h1>User: {userInfo.username}</h1>
         ) : (
           <h1>Enter a username to post message</h1>
         )}
@@ -91,9 +103,14 @@ export default function FixedPostMessageContainer({loadingPost, setLoadingPost})
         </PostMessageContainer>
       )}
       {showPostContainer ? (
+        <>
         <ShowPostButton onClick={() => setShowPostContainer(false)} />
+        <p>Hide</p></>
       ) : (
+        <>
         <HidePostButton onClick={() => setShowPostContainer(true)} />
+        <p>Show </p>
+        </>
       )}
     </MainContainer>
   );
@@ -109,6 +126,15 @@ const MainContainer = styled.div`
   align-items: center;
   box-shadow: 0px 20px 40px rgba(118, 149, 236, 0.3);
   background-color: #ffffff;
+
+   p{
+    font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 26px;
+  color:#7695EC;
+   }
 `;
 
 const TittleBar = styled.div`
@@ -220,13 +246,15 @@ const CreateButton = styled.button`
 `;
 
 const ShowPostButton = styled(SlArrowUp)`
-  margin-bottom: 20px;
-  margin-top: 20px;
+  margin-bottom: 2px;
+  margin-top: 5px;
   cursor: pointer;
+  color: #7695ec;
 `;
 const HidePostButton = styled(SlArrowDown)`
-  margin-bottom: 20px;
+  margin-bottom: 2px;
   cursor: pointer;
+  color: #7695ec;
 `;
 
 const LogOutButton = styled(BiLogOut)`
